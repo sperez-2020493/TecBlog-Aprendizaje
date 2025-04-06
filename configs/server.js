@@ -6,6 +6,7 @@ import helmet from "helmet"
 import morgan from "morgan"
 import { dbConnection } from "./mongo.js"
 import apiLimiter from "../src/middlewares/validar-cant-peticiones.js"
+import authRoutes from "../src/auth/auth.router.js"
 
 
 const middlewares = (app) => {
@@ -17,11 +18,17 @@ const middlewares = (app) => {
     app.use(apiLimiter)
 }
 
-/*
-const routes = (app) =>{
 
+const routes = (app) =>{
+    app.use("/TecBlog/v1/auth", authRoutes)
+    //app.use("/api/usuarios", usuariosRoutes)
+    //app.use("/api/roles", rolesRoutes)
+    //app.use("/api/medicos", medicosRoutes)
+    //app.use("/api/hospitales", hospitalesRoutes)
+    //app.use("/api/uploads", uploadsRoutes)
+    //app.use("/api/buscar", buscarRoutes)
 }
-    */
+
 
 const conectarDB = async () =>{
     try{
@@ -37,7 +44,7 @@ export const initiServer = () => {
     try{
         middlewares(app)
         conectarDB()
-       // routes(app)
+       routes(app)
         app.listen(process.env.PORT)
         console.log(`Server running on port ${process.env.PORT}`)
     }catch(err){
